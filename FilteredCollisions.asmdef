@@ -1,0 +1,9 @@
+{
+  "name": "FilteredCollisions",
+  "references": [
+    "Unity.Entities",
+    "Unity.Physics",
+    "Unity.Collections"
+  ],
+  "allowUnsafeCode": true
+}
