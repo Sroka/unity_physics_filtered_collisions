@@ -7,12 +7,11 @@ using Unity.Physics.Systems;
 namespace Arc.FilteredCollisions
 {
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-    [UpdateAfter(typeof(ExportPhysicsWorld))]
+    [UpdateAfter(typeof(EndFramePhysicsSystem))]
     public class FilteredEntityCollisionsSystem : SystemBase
     {
         private  BuildPhysicsWorld buildPhysicsWorld => World.GetOrCreateSystem<BuildPhysicsWorld>();
         private  StepPhysicsWorld stepPhysicsWorld => World.GetOrCreateSystem<StepPhysicsWorld>();
-        private  EndFramePhysicsSystem endFramePhysicsSystem => World.GetOrCreateSystem<EndFramePhysicsSystem>();
         internal NativeHashMap<EntityPair, CollisionEvent> Collisions;
 
         internal JobHandle EventsCollectedHandle;
@@ -34,7 +33,6 @@ namespace Arc.FilteredCollisions
                .Schedule();
             Dependency = new CollectCollisionsJob {Collisions = collisions,}
                .Schedule(stepPhysicsWorld.Simulation, ref buildPhysicsWorld.PhysicsWorld, Dependency);
-            endFramePhysicsSystem.AddInputDependency(Dependency);
             EventsCollectedHandle = Dependency;
         }
 
